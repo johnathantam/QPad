@@ -28,8 +28,8 @@ interface BacktestResult {
 }
 
 export type {
-    Bar,
-    Trade,
-    EquityPoint,
-    BacktestResult
+  Bar,
+  Trade,
+  EquityPoint,
+  BacktestResult
 }

@@ -3,9 +3,11 @@ import pandas as pd
 class Strategy:
     def __init__(self):
         self.trades = []
-        self.positions = {}
-        self.cash = 100000.0
+        self.positions = {}             # instrument_id -> size
+        self.cash = 100000.0            
         self.equity_curve = []
+        self.current_bars = {}          # instrument_id -> bar dict (shape varies by instrument)
+        self.current_date = None
 
     def on_start(self):
         pass
