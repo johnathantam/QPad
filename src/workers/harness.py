@@ -20,8 +20,11 @@ class Strategy:
         self.cash -= price * size
         self.positions[symbol] = self.positions.get(symbol, 0) + size
         self.trades.append({
-            "date": self._current_date, "symbol": symbol,
-            "action": "buy", "size": size, "price": price
+            "date": self._current_date, 
+            "symbol": symbol,
+            "action": "buy", 
+            "size": size, 
+            "price": price
         })
 
     def sell(self, symbol, size):
@@ -29,8 +32,11 @@ class Strategy:
         self.cash += price * size
         self.positions[symbol] = self.positions.get(symbol, 0) - size
         self.trades.append({
-            "date": self._current_date, "symbol": symbol,
-            "action": "sell", "size": size, "price": price
+            "date": self._current_date, 
+            "symbol": symbol,
+            "action": "sell", 
+            "size": size, 
+            "price": price
         })
 
 

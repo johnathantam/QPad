@@ -9,7 +9,7 @@ interface Bar {
 
 interface Trade {
   date: string;
-  symbol: string;
+  instrumentId: string;
   action: 'buy' | 'sell';
   size: number;
   price: number;

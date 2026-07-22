@@ -7,7 +7,6 @@ function StrategyEditor({ value, onChange }: { value: string; onChange: (v: stri
   return (
     <div className="strategy-editor-container">
       <Editor
-        height="500px"
         defaultLanguage="python"
         value={value}
         onChange={handleChange}
