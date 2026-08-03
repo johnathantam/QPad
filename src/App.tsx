@@ -1,10 +1,10 @@
 import './App.css';
-import { StrategyPanel } from './components/strategyPanel/StrategyPanel';
+import { AppView } from "./components/appView/AppView";
 
 function App() {
   return (
     <>
-      <StrategyPanel></StrategyPanel>
+      <AppView></AppView>
     </>
   )
 }

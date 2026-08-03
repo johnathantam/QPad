@@ -9,7 +9,7 @@ interface Bar {
 
 interface Trade {
   date: string;
-  symbol: string;
+  instrumentId: string;
   action: 'buy' | 'sell';
   size: number;
   price: number;
@@ -28,8 +28,8 @@ interface BacktestResult {
 }
 
 export type {
-    Bar,
-    Trade,
-    EquityPoint,
-    BacktestResult
+  Bar,
+  Trade,
+  EquityPoint,
+  BacktestResult
 }

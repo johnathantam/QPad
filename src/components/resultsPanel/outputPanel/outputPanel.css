@@ -1,0 +1,154 @@
+.output-panel-container {
+    flex: 1;
+    min-height: 0;
+    display: flex;
+    flex-direction: column;
+    overflow: hidden;
+}
+
+.output-tab-placeholder {
+    flex: 1;
+    min-height: 0;
+    display: flex;
+    align-items: center;
+    justify-content: center;
+    padding: 20px;
+    text-align: center;
+    font-size: 12px;
+    font-family: 'DM Mono', 'Fira Code', monospace;
+    color: #555555;
+    font-style: italic;
+}
+
+/* ── Stat cards ───────────────────────────────────────────── */
+
+.output-stats-row {
+    display: grid;
+    grid-template-columns: repeat(auto-fit, minmax(100px, 1fr));
+    gap: 6px;
+    padding: 10px 12px;
+    border-bottom: 1px solid rgba(180, 180, 180, 0.15);
+    flex-shrink: 0;
+}
+
+.output-stat-card {
+    padding: 8px 10px;
+    border: 1px solid rgba(180, 180, 180, 0.2);
+    border-radius: 5px;
+    background: #fff;
+}
+
+.output-stat-label {
+    font-size: 9.5px;
+    font-weight: 500;
+    letter-spacing: 0.05em;
+    text-transform: uppercase;
+    color: #858585;
+    margin-bottom: 3px;
+}
+
+.output-stat-value {
+    font-size: 14px;
+    font-weight: 600;
+    font-family: 'DM Mono', 'Fira Code', monospace;
+    color: #1a1a1a;
+}
+.output-stat-value.up { color: #16a34a; }
+.output-stat-value.down { color: #dc2626; }
+
+/* ── Chart ────────────────────────────────────────────────── */
+
+.output-chart-container {
+    height: 200px;
+    flex-shrink: 0;
+    padding: 10px 8px 4px 4px;
+    border-bottom: 1px solid rgba(180, 180, 180, 0.15);
+}
+
+/* ── Trade log ────────────────────────────────────────────── */
+
+.output-empty {
+    flex: 1;
+    display: flex;
+    align-items: center;
+    justify-content: center;
+    font-size: 12px;
+    font-family: 'DM Mono', 'Fira Code', monospace;
+    color: #858585;
+    font-style: italic;
+}
+
+.output-trade-log {
+    flex: 1;
+    min-height: 0;
+    display: flex;
+    flex-direction: column;
+    overflow: hidden;
+}
+
+.output-trade-log-scroll {
+    flex: 1;
+    min-height: 0;
+    overflow-y: auto;
+}
+
+.output-trade-table {
+    width: 100%;
+    border-collapse: collapse;
+}
+
+.output-trade-table thead th {
+    position: sticky;
+    top: 0;
+    text-align: left;
+    padding: 6px 10px;
+    font-size: 9.5px;
+    font-weight: 600;
+    letter-spacing: 0.05em;
+    text-transform: uppercase;
+    color: #858585;
+    background: #fdfdff;
+    border-bottom: 1px solid rgba(180, 180, 180, 0.2);
+}
+
+.output-trade-table td {
+    padding: 5px 10px;
+    font-size: 11px;
+    font-family: 'DM Mono', 'Fira Code', monospace;
+    color: #333;
+    border-bottom: 1px solid rgba(180, 180, 180, 0.1);
+}
+
+.output-trade-table tr.buy td:nth-child(3) { color: #16a34a; }
+.output-trade-table tr.sell td:nth-child(3) { color: #dc2626; }
+.output-trade-table tr.rejected td:nth-child(3) { color: #b45309; }
+
+.output-trade-pagination {
+    display: flex;
+    align-items: center;
+    gap: 8px;
+    padding: 6px 12px;
+    border-top: 1px solid rgba(180, 180, 180, 0.15);
+    flex-shrink: 0;
+}
+
+.output-trade-pagination button {
+    padding: 3px 9px;
+    font-size: 11px;
+    font-family: inherit;
+    border: 1px solid rgba(180, 180, 180, 0.3);
+    border-radius: 4px;
+    background: transparent;
+    color: #555;
+    cursor: pointer;
+}
+.output-trade-pagination button:disabled {
+    opacity: 0.4;
+    cursor: not-allowed;
+}
+
+.output-trade-pagination span {
+    font-size: 11px;
+    font-family: 'DM Mono', 'Fira Code', monospace;
+    color: #858585;
+}

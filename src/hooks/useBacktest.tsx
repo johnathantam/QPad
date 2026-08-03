@@ -1,5 +1,5 @@
 import { useEffect, useRef, useState, useCallback } from 'react';
-import { loadSymbols } from '../lib/loadData';
+import { loadInstrumentData } from '../lib/loadData';
 import type { BacktestResult } from '../types';
 
 type BacktestState =
@@ -30,11 +30,11 @@ function useBacktest() {
         return () => workerRef.current?.terminate();
     }, []);
 
-    const run = useCallback(async (code: string, symbols: string[]) => {
+    const run = useCallback(async (code: string, instrumentIds: string[]) => {
         setState({ status: 'loading' });
 
         try {
-            const data = await loadSymbols(symbols);
+            const data = await loadInstrumentData(instrumentIds);
             setState({ status: 'running' });
             workerRef.current?.postMessage({ code, data });
         } catch (err: any) {

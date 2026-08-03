@@ -1,0 +1,41 @@
+.explorer-panel-container {
+    width: 100%;
+    min-width: 280px;
+    height: 100%;
+    background-color: rgb(255, 255, 255);
+    padding-top: 4%;
+
+    overflow-y: scroll;
+}
+
+.explorer-header-container {
+    width: 100%;
+    
+    border-bottom: 1px solid rgba(176, 176, 176, 0.515);
+
+    padding-bottom: 10px;
+}
+
+.explorer-panel-title {
+    font-size: 16px;
+    font-weight: 400;
+    font-family: sans-serif;
+
+    margin-left: 5%;
+    margin-top: 0px;
+
+    letter-spacing: 2px;
+}
+
+.explorer-panel-description {
+    font-size: 14px;
+    font-weight: 400;
+    font-family: sans-serif;
+
+    margin-left: 5%;
+    margin-bottom: 5px;
+
+    line-height: 20px;
+
+    color: rgba(35, 35, 35, 0.61);
+}

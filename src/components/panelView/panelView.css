@@ -1,0 +1,12 @@
+.panel-view-container {
+    width: 100%;
+    height: calc(100% - 40px);
+    box-sizing: border-box;
+    background-color: #ccc;
+}
+
+.panel-view-content-container {
+    height: 100%;
+    width: 100%;
+    overflow: auto;
+}

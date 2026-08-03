@@ -1,0 +1,30 @@
+.number-input-container {
+    width: 100%;
+
+    margin-top: 5px;
+
+    display: flex;
+    flex-direction: column;
+}
+
+.number-input-title {
+    font-size: 16px;
+    color: rgba(0, 0, 0, 0.568);
+}
+
+.number-input {
+    width: 98%;
+    height: 100%;
+
+    padding: 2%;
+
+    margin-top: 6px;
+
+    font-size: 14px;
+
+    background-color: rgba(220, 220, 220, 0.136);
+
+    border: 1px solid rgba(128, 128, 128, 0.354);
+    border-radius: 6px;
+    box-sizing: border-box;
+}

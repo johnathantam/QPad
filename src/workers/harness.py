@@ -6,6 +6,10 @@ class Strategy:
         self.positions = {}
         self.cash = 100000.0
         self.equity_curve = []
+        self.current_bars = {}
+        self.current_date = None
+        self._commission = 0.0
+        self._slippage_percentage = 0.0
 
     def on_start(self):
         pass
@@ -14,21 +18,56 @@ class Strategy:
         pass
 
     def buy(self, symbol, size):
-        price = self._current_bars[symbol]["close"]
-        self.cash -= price * size
+        raw_price = self._current_bars[symbol]["close"]
+        price = raw_price * (1 + self._slippage_percentage)
+        cost = price * size + self._commission
+        if cost > self.cash:
+            _emit_log(f"{self._current_date}: BUY REJECTED {symbol} x{size} — insufficient cash", "error")
+            self.trades.append({
+                "date": self._current_date,
+                "symbol": symbol,
+                "action": "buy_rejected",
+                "size": size,
+                "price": price
+            })
+            return
+        self.cash -= cost
         self.positions[symbol] = self.positions.get(symbol, 0) + size
+        _emit_log(f"{self._current_date}: BUY {symbol} x{size} @ {price:.2f} (commission ${self._commission:.2f})", "success")
         self.trades.append({
-            "date": self._current_date, "symbol": symbol,
-            "action": "buy", "size": size, "price": price
+            "date": self._current_date,
+            "symbol": symbol,
+            "action": "buy",
+            "size": size,
+            "price": price,
+            "commission": self._commission
         })
 
     def sell(self, symbol, size):
-        price = self._current_bars[symbol]["close"]
-        self.cash += price * size
-        self.positions[symbol] = self.positions.get(symbol, 0) - size
+        current_position = self.positions.get(symbol, 0)
+        raw_price = self._current_bars[symbol]["close"]
+        price = raw_price * (1 - self._slippage_percentage)
+        if size > current_position:
+            _emit_log(f"{self._current_date}: SELL REJECTED {symbol} x{size} — insufficient position (have {current_position})", "error")
+            self.trades.append({
+                "date": self._current_date,
+                "symbol": symbol,
+                "action": "sell_rejected",
+                "size": size,
+                "price": price
+            })
+            return
+        proceeds = price * size - self._commission
+        self.cash += proceeds
+        self.positions[symbol] = current_position - size
+        _emit_log(f"{self._current_date}: SELL {symbol} x{size} @ {price:.2f} (commission ${self._commission:.2f})", "success")
         self.trades.append({
-            "date": self._current_date, "symbol": symbol,
-            "action": "sell", "size": size, "price": price
+            "date": self._current_date,
+            "symbol": symbol,
+            "action": "sell",
+            "size": size,
+            "price": price,
+            "commission": self._commission
         })
 
 
@@ -43,9 +82,24 @@ def align_data(raw_data):
     return frames, all_dates
 
 
-def run_backtest(strategy_cls, raw_data):
+def run_backtest(strategy_cls, backtestSettings, raw_data):
+    settings = backtestSettings or {}
+    starting_capital = float(settings.get("startingCapital", 100000.0))
+    commission = float(settings.get("commissionPerTrade", 0.0))
+    slippage_percentage = float(settings.get("slippagePercentage", 0.0)) / 100.0
+    start_date = settings.get("startDate")
+    end_date = settings.get("endDate")
+
     frames, all_dates = align_data(raw_data)
+    if start_date:
+        all_dates = [d for d in all_dates if d >= pd.Timestamp(start_date)]
+    if end_date:
+        all_dates = [d for d in all_dates if d <= pd.Timestamp(end_date)]
+
     strat = strategy_cls()
+    strat.cash = starting_capital
+    strat._commission = commission
+    strat._slippage_percentage = slippage_percentage
     strat.on_start()
 
     for date in all_dates:
@@ -71,6 +125,17 @@ def run_backtest(strategy_cls, raw_data):
             for sym in bars_today if sym in strat.positions
         )
         strat.equity_curve.append({"date": date_str, "equity": equity})
+
+    total_trades = sum(1 for t in strat.trades if t["action"] in ("buy", "sell"))
+    rejected = sum(1 for t in strat.trades if "rejected" in t["action"])
+    final_equity = strat.equity_curve[-1]["equity"] if strat.equity_curve else strat.cash
+    pnl_percentage = ((final_equity - starting_capital) / starting_capital) * 100
+
+    _emit_log(
+        f"Backtest complete — {total_trades} trades filled, {rejected} rejected, "
+        f"final equity ${final_equity:,.2f} ({pnl_percentage:+.2f}%)",
+        "success"
+    )
 
     return {
         "trades": strat.trades,
