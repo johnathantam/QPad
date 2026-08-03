@@ -3,7 +3,7 @@
 // via messages in and out
 
 // load custom environment initialization code
-import INITIALIZE from "./initializeEnvironment.py?raw";
+import INITIALIZE from "./initialize_environment.py?raw";
 
 // load custom backtesting harness code
 import HARNESS from './harness.py?raw';
@@ -38,16 +38,18 @@ async function initPyodide() {
 // on call, expect new code and data -- in which we can run the backtest
 self.onmessage = async (e: MessageEvent) => {
     // Extract backtesting code and stock data needed to execude the backtest
-    const { code, data } = e.data;
+    const { code, backtestSettings, data } = e.data;
 
     if (!pyodideReadyPromise) {
         pyodideReadyPromise = initPyodide();
     }
 
-    // Execute the backtested code
     try {
+        // wait for pyodide to load
         const pyodide = await pyodideReadyPromise;
 
+        // set global info into python environment to use
+        pyodide.globals.set('settings', pyodide.toPy(backtestSettings ?? {}));
         pyodide.globals.set('raw_data', pyodide.toPy(data));
 
         // load preset code
@@ -55,7 +57,7 @@ self.onmessage = async (e: MessageEvent) => {
 
         // run custom user code
         const result = await pyodide.runPythonAsync(
-            'run_backtest(MyStrategy, raw_data)'
+            'run_backtest(MyStrategy, settings, raw_data)'
         );
 
         self.postMessage({ type: 'result', success: true, result: result.toJs({ dict_converter: Object.fromEntries })});
