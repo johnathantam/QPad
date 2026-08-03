@@ -1,0 +1,49 @@
+.backtester-docs {
+  font-family: inherit;
+  font-size: 12.5px;
+  line-height: 1.55;
+  color: #cccccc;
+  display: flex;
+  flex-direction: column;
+  gap: 14px;
+}
+
+.backtester-docs-paragraph {
+  margin: 0;
+  color: #d4d4d4;
+}
+
+.backtester-docs-block {
+  display: flex;
+  flex-direction: column;
+  gap: 6px;
+}
+
+.backtester-docs-heading {
+  margin: 0;
+  font-size: 11px;
+  font-weight: 600;
+  letter-spacing: 0.6px;
+  text-transform: uppercase;
+  color: #858585;
+}
+
+.backtester-docs-list {
+  margin: 0;
+  padding-left: 18px;
+  display: flex;
+  flex-direction: column;
+  gap: 5px;
+}
+
+.backtester-docs-term {
+  color: #454545;
+  font-weight: 500;
+}
+
+.backtester-docs-note {
+  margin: 0;
+  font-size: 11.5px;
+  color: #858585;
+  font-style: italic;
+}

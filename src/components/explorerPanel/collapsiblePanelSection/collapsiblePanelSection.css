@@ -1,0 +1,64 @@
+.collapsible-section-header {
+  display: flex;
+  align-items: center;
+  width: 100%;
+  height: 32px;
+  padding: 0 8px;
+  cursor: pointer;
+  user-select: none;
+  font-size: 13px;
+  font-weight: 600;
+  letter-spacing: 0.6px;
+  text-transform: uppercase;
+  font-family: inherit;
+  color: #cccccc;
+  background: transparent;
+  border: none;
+  text-align: left;
+  transition: background-color 0.12s ease, color 0.12s ease;
+}
+
+.collapsible-section-header:hover {
+  background-color: #2a2d2e;
+  color: #ffffff;
+}
+
+.collapsible-section-header:focus-visible {
+  outline: 2px solid #007acc;
+  outline-offset: -2px;
+}
+
+.collapsible-section-chevron {
+  display: inline-flex;
+  align-items: center;
+  justify-content: center;
+  width: 16px;
+  height: 16px;
+  margin-right: 4px;
+  font-size: 9px;
+  color: #858585;
+  transform-origin: center;
+  transition: transform 0.15s ease;
+}
+
+.collapsible-section-chevron.open {
+  transform: rotate(90deg);
+}
+
+/* Grid-based expand/collapse — animates height without needing JS measurement */
+.collapsible-section-content-wrapper {
+  display: grid;
+  overflow: hidden;
+  transition: grid-template-rows 0.18s ease;
+  border-bottom: 1px solid rgba(180, 180, 180, 0.461);
+}
+
+.collapsible-section-content {
+  overflow: hidden;
+  box-sizing: border-box;
+  min-height: 0;
+  padding: 0px 8px 15px 20px;
+  display: flex;
+  flex-direction: column;
+  gap: 10px;
+}

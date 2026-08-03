@@ -10,7 +10,7 @@ function StrategyEditor({ value, onChange }: { value: string; onChange: (v: stri
         defaultLanguage="python"
         value={value}
         onChange={handleChange}
-        theme="vs-dark"
+        theme="vs-light"
         options={{ minimap: { enabled: false }, fontSize: 14, automaticLayout: true }}
       />
     </div>

@@ -1,56 +1,14 @@
-// import { useState } from "react";
-// import { useBacktest } from "../../hooks/useBacktest";
-// import { StrategyEditor } from "../strategyEditor/StrategyEditor";
-// import "./strategyEditorPanel.css";
-
-// const DEFAULT_CODE: string = `class MyStrategy(Strategy):
-//     def on_start(self):
-//         pass
-
-//     def on_bar(self, date, bar):
-//         pass
-// `;
-
-// function StrategyEditorPanel() {
-//     const [code, setCode] = useState(DEFAULT_CODE);
-//     const { state, run } = useBacktest();
-
-//     const handleRun = () => {
-//         run(code, ["AAPL", "MSFT"]);
-//     };
-
-//     return (
-//         <>  
-//         <div className="strategy-editor-panel-container">
-//             <StrategyEditor value={code} onChange={setCode} />
-//         </div>
-
-//             {/* <button onClick={handleRun} disabled={state.status === "loading" || state.status === "running"}>
-//                 {state.status === "loading" && "Loading data…"}
-//                 {state.status === "running" && "Running…"}
-//                 {(state.status === "idle" || state.status === "success" || state.status === "error") && "Run Backtest"}
-//             </button>
-
-//             {state.status === "error" && <div className="error">{state.error}</div>}
-
-//             {state.status === "success" && (
-//                 <div className="results">
-//                     <p>P&L: {state.result.final_cash}</p>
-//                 </div>
-//             )} */}
-//         </>
-//     );
-// }
-
-// export { StrategyEditorPanel };
-
+import { useEffect } from "react";
 import { useCodeEditorStore } from "../../store/useCodeEditorStore";
-import { StrategyEditor } from "../strategyEditor/StrategyEditor";
+import { StrategyEditor } from "./strategyEditor/StrategyEditor";
 import "./strategyEditorPanel.css";
 
 function StrategyEditorPanel() {
   const code = useCodeEditorStore((set) => set.code);
   const setCode = useCodeEditorStore((set) => set.setCode);
+  const status = useCodeEditorStore((set) => set.backtestStatus);
+  const runBacktest = useCodeEditorStore((set) => set.runBacktest);
+  const result = useCodeEditorStore((set) => set.backtestResult);
 
   // Sync the local useBacktest result into the shared store
   // whenever it changes, so other components (e.g. Header) can read it.
@@ -64,13 +22,34 @@ function StrategyEditorPanel() {
 //     }
 //   }, [state, setBacktestState]);
 
-//   const handleRun = () => {
-//     run(code, ["AAPL", "MSFT"]);
-//   };
+  const handleRun = () => {
+    runBacktest(["AAPL"]);
+  };
+
+  useEffect(() => {
+    if (result) {
+      console.log("Backtest result:", result);
+    }
+  }, [result]);
+
+  // runBacktest(["AAPL", "MSFT"]);
 
   return (
     <div className="strategy-editor-panel-container">
-      <StrategyEditor value={code} onChange={setCode} />
+       <div className="strategy-editor-panel-header">
+        <span className="strategy-editor-panel-title">strategy.py</span>
+        <button
+          className="strategy-editor-run-button"
+          onClick={handleRun}
+          disabled={status === "running"}
+        >
+          {status === "running" ? "Running…" : "▶ Run"}
+        </button>
+      </div> 
+
+      <div className="strategy-editor-code-container">
+        <StrategyEditor value={code} onChange={setCode} />
+      </div>
     </div>
   );
 }

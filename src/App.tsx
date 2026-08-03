@@ -1,5 +1,5 @@
 import './App.css';
-import { AppView } from "./components/view/view";
+import { AppView } from "./components/appView/AppView";
 
 function App() {
   return (
