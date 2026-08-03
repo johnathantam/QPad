@@ -128,7 +128,7 @@ const useCodeEditorStore = create<CodeEditorState>((set, get) => ({
             };
 
             // pass code and data into the worker for it to run
-            backtestWorker.postMessage({ code: get().code, settings: get().backtestSettings ,data: data });
+            backtestWorker.postMessage({ code: get().code, backtestSettings: get().backtestSettings ,data: data });
         } catch (err: any) {
             get().addBacktestLog(err.message ?? 'Failed to load data', 'error');
             set({ backtestStatus: 'error', backtestResult: null, backtestError: err.message });

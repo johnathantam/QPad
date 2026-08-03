@@ -2,16 +2,18 @@ import "./explorerDateDurationInput.css";
 
 interface ExplorerDateDurationInputProps {
     label: string;
-    startDate: string; // ISO format "YYYY-MM-DD" — what <input type="date"> expects
+    startDate: string;
     endDate: string;
-    // onStartDateChange: (date: string) => void;
-    // onEndDateChange: (date: string) => void;
+    onStartDateChange: (date: string) => void;
+    onEndDateChange: (date: string) => void;
 }
 
 function ExplorerDateDurationInput({
     label,
     startDate,
     endDate,
+    onStartDateChange,
+    onEndDateChange,
 }: ExplorerDateDurationInputProps) {
     return (
         <div className="date-duration-input-container">
@@ -22,6 +24,7 @@ function ExplorerDateDurationInput({
                     value={startDate}
                     className="date-input"
                     max={endDate || undefined}
+                    onChange={(e) => onStartDateChange(e.target.value)}
                 />
                 <span className="date-duration-separator">to</span>
                 <input
@@ -29,6 +32,7 @@ function ExplorerDateDurationInput({
                     value={endDate}
                     className="date-input"
                     min={startDate || undefined}
+                    onChange={(e) => onEndDateChange(e.target.value)}
                 />
             </div>
         </div>

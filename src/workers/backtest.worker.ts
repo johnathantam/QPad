@@ -49,7 +49,7 @@ self.onmessage = async (e: MessageEvent) => {
         const pyodide = await pyodideReadyPromise;
 
         // set global info into python environment to use
-        pyodide.globals.set('settings', pyodide.toPy(backtestSettings ?? {}));
+        pyodide.globals.set('backtestSettings', pyodide.toPy(backtestSettings ?? {}));
         pyodide.globals.set('raw_data', pyodide.toPy(data));
 
         // load preset code
@@ -57,7 +57,7 @@ self.onmessage = async (e: MessageEvent) => {
 
         // run custom user code
         const result = await pyodide.runPythonAsync(
-            'run_backtest(MyStrategy, settings, raw_data)'
+            'run_backtest(MyStrategy, backtestSettings, raw_data)'
         );
 
         self.postMessage({ type: 'result', success: true, result: result.toJs({ dict_converter: Object.fromEntries })});

@@ -4,20 +4,19 @@ import { useCodeEditorStore } from "../../../store/useCodeEditorStore";
 import { type Trade, type EquityPoint } from "../../../types";
 import "./outputPanel.css";
 
-const STARTING_CASH = 100000;
 const PAGE = 15;
 
 // ─── Stat computation ───────────────────────────────────────────────────────
 // The Python harness only returns raw trades/equity_curve — no derived stats —
 // so we compute them here once per result, rather than in the hot backtest loop.
 
-function computeStats(equityCurve: EquityPoint[], trades: Trade[]) {
+function computeStats(equityCurve: EquityPoint[], trades: Trade[], startingCapital: number) {
   if (equityCurve.length === 0) {
     return null;
   }
 
   const finalEquity = equityCurve[equityCurve.length - 1].equity;
-  const totalReturn = ((finalEquity - STARTING_CASH) / STARTING_CASH) * 100;
+  const totalReturn = ((finalEquity - startingCapital) / startingCapital) * 100;
 
   let peak = equityCurve[0].equity;
   let maxDd = 0;
@@ -144,11 +143,12 @@ function TradeLog({ trades }: { trades: Trade[] }) {
 
 function OutputPanel() {
   const result = useCodeEditorStore((s) => s.backtestResult);
+  const startingCapital = useCodeEditorStore((s) => s.backtestSettings.startingCapital);
 
   const stats = useMemo(() => {
     if (!result) return null;
-    return computeStats(result.equity_curve, result.trades);
-  }, [result]);
+    return computeStats(result.equity_curve, result.trades, startingCapital);
+  }, [result, startingCapital]);
 
   if (!result || !stats) {
     return (

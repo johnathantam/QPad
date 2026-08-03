@@ -9,7 +9,7 @@ class Strategy:
         self.current_bars = {}
         self.current_date = None
         self._commission = 0.0
-        self._slippage_pct = 0.0
+        self._slippage_percentage = 0.0
 
     def on_start(self):
         pass
@@ -19,7 +19,7 @@ class Strategy:
 
     def buy(self, symbol, size):
         raw_price = self._current_bars[symbol]["close"]
-        price = raw_price * (1 + self._slippage_pct)
+        price = raw_price * (1 + self._slippage_percentage)
         cost = price * size + self._commission
         if cost > self.cash:
             _emit_log(f"{self._current_date}: BUY REJECTED {symbol} x{size} — insufficient cash", "error")
@@ -46,7 +46,7 @@ class Strategy:
     def sell(self, symbol, size):
         current_position = self.positions.get(symbol, 0)
         raw_price = self._current_bars[symbol]["close"]
-        price = raw_price * (1 - self._slippage_pct)
+        price = raw_price * (1 - self._slippage_percentage)
         if size > current_position:
             _emit_log(f"{self._current_date}: SELL REJECTED {symbol} x{size} — insufficient position (have {current_position})", "error")
             self.trades.append({
@@ -82,11 +82,11 @@ def align_data(raw_data):
     return frames, all_dates
 
 
-def run_backtest(strategy_cls, settings, raw_data):
-    settings = settings or {}
+def run_backtest(strategy_cls, backtestSettings, raw_data):
+    settings = backtestSettings or {}
     starting_capital = float(settings.get("startingCapital", 100000.0))
     commission = float(settings.get("commissionPerTrade", 0.0))
-    slippage_pct = float(settings.get("slippagePct", 0.0)) / 100.0
+    slippage_percentage = float(settings.get("slippagePercentage", 0.0)) / 100.0
     start_date = settings.get("startDate")
     end_date = settings.get("endDate")
 
@@ -99,7 +99,7 @@ def run_backtest(strategy_cls, settings, raw_data):
     strat = strategy_cls()
     strat.cash = starting_capital
     strat._commission = commission
-    strat._slippage_pct = slippage_pct
+    strat._slippage_percentage = slippage_percentage
     strat.on_start()
 
     for date in all_dates:
