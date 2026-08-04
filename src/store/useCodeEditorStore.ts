@@ -48,15 +48,46 @@ interface CodeEditorState {
     backtestSettings: BacktestSettings;
     setBacktestSettings: (s: Partial<BacktestSettings>) => void;
 
-    runBacktest: (instrumentIds: string[]) => Promise<void>;
+    runBacktest: () => Promise<void>;
 }
 
 const DEFAULT_CODE = `class MyStrategy(Strategy):
+    # on_start runs ONCE, right before the backtest begins.
+    # Use it to set up any variables your strategy needs to remember
+    # between bars (days) — kind of like a constructor.
     def on_start(self):
-        pass
+        self.symbol = "AAPL"  # the instrument this strategy trades
 
+    # on_bar runs ONCE PER DAY, for every day in the backtest period.
+    # "bar" is a dict of that day's price data for every instrument
+    # currently loaded, e.g.:
+    # { "AAPL": {"open": .., "high": .., "low": .., "close": .., "volume": ..}, ... }
     def on_bar(self, date, bar):
-        pass
+        # Not every symbol has data on every day — always check first,
+        # otherwise bar[self.symbol] could throw a KeyError.
+        if self.symbol not in bar:
+            return
+
+        # Grab today's closing price for our symbol.
+        price = bar[self.symbol]["close"]
+
+        # self.positions is a dict of symbol -> how many shares you currently hold.
+        # .get(self.symbol, 0) returns 0 if you don't hold any yet.
+        position = self.positions.get(self.symbol, 0)
+
+        if position == 0:
+            # We don't own any shares yet — buy some.
+            # self.cash is how much money you have available right now.
+            # Here we spend 10% of our cash on this trade.
+            size = int((self.cash * 0.10) / price)  # how many whole shares that buys
+
+            if size > 0:
+                self.buy(self.symbol, size)  # places the buy order
+        else:
+            # We already own shares — sell everything we're holding.
+            # This just demonstrates sell() working; a real strategy
+            # would only sell based on some condition, not every time.
+            self.sell(self.symbol, position)
 `;
 
 // module-level singleton — created once, shared by everyone
@@ -112,7 +143,7 @@ const useCodeEditorStore = create<CodeEditorState>((set, get) => ({
         }
 
         set({ backtestStatus: 'loading', backtestResult: null, backtestError: null });
-        
+
         try {
             // load historical data for the selected instruments (stocks)
             const data = await loadInstrumentData(instrumentIds);
