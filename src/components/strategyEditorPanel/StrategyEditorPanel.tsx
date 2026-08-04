@@ -1,4 +1,3 @@
-import { useEffect } from "react";
 import { useCodeEditorStore } from "../../store/useCodeEditorStore";
 import { StrategyEditor } from "./strategyEditor/StrategyEditor";
 import "./strategyEditorPanel.css";
@@ -8,19 +7,10 @@ function StrategyEditorPanel() {
   const setCode = useCodeEditorStore((set) => set.setCode);
   const status = useCodeEditorStore((set) => set.backtestStatus);
   const runBacktest = useCodeEditorStore((set) => set.runBacktest);
-  const result = useCodeEditorStore((set) => set.backtestResult);
 
   const handleRun = () => {
-    runBacktest(["AAPL"]);
+    runBacktest();
   };
-
-  useEffect(() => {
-    if (result) {
-      console.log("Backtest result:", result);
-    }
-  }, [result]);
-
-  // runBacktest(["AAPL", "MSFT"]);
 
   return (
     <div className="strategy-editor-panel-container">
