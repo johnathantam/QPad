@@ -4,7 +4,7 @@ import type { Bar } from '../types';
 async function loadInstrumentData(instrumentIds: string[]): Promise<Record<string, Bar[]>> {
     const entries = await Promise.all(
         instrumentIds.map(async (instrumentId) => {
-            const res = await fetch(`/data/sampleStockUniverse/${instrumentId}.json`);
+            const res = await fetch(`${import.meta.env.BASE_URL}data/sampleStockUniverse/${instrumentId}.json`);
             if (!res.ok) {
                 throw new Error(`Failed to load data for ${instrumentId}`);
             }
