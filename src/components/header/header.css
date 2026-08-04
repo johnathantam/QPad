@@ -60,4 +60,6 @@
 
 .header-carousel-container {
     flex: 1;
+    min-width: 0;
+    overflow: hidden;
 }
