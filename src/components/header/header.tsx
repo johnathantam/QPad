@@ -1,5 +1,5 @@
 import "./header.css";
-import { StockCarousel } from "./stockCarousel/stockCarousel";
+import { StockCarousel } from "./stockCarousel/StockCarousel";
 
 function Header() {
     return (
