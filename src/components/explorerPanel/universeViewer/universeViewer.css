@@ -1,0 +1,73 @@
+.universe-viewer-picker {
+    display: flex;
+    flex-direction: column;
+    gap: 12px;
+    width: 100%;
+    padding-right: 6px;
+    box-sizing: border-box;
+}
+
+.universe-viewer-picker-header {
+    display: flex;
+    align-items: center;
+    justify-content: space-between;
+    gap: 8px;
+}
+
+.universe-viewer-picker-note {
+  font-size: 12px;
+  color: #858585;
+  font-family: "DM Mono", monospace;
+  margin: 0 0 0px 0;
+  line-height: 1.4;
+}
+
+.universe-viewer-picker-search {
+    flex: 1;
+    height: 28px;
+    padding: 0 8px;
+    border: 1px solid rgba(128, 128, 128, 0.354);
+    background-color: rgba(220, 220, 220, 0.136);
+    color: #303030;
+    font-size: 14px;
+    border-radius: 4px;
+}
+
+.universe-viewer-picker-search::placeholder {
+    color: #777;
+}
+
+.universe-viewer-picker-count {
+    font-size: 12px;
+    color: #888;
+    white-space: nowrap;
+}
+
+.universe-viewer-picker-grid {
+    display: grid;
+    grid-template-columns: repeat(auto-fill, minmax(70px, 1fr));
+    gap: 6px;
+    max-height: 300px;
+    overflow-y: auto;
+}
+
+.universe-viewer-chip {
+    display: flex;
+    justify-content: center;
+    align-items: center;
+
+    height: 28px;
+    border-radius: 4px;
+
+    background-color: #edecff;
+    color: #ccc;
+
+    font-size: 13px;
+    font-family: monospace;
+}
+
+.universe-viewer-picker-empty {
+    color: #777;
+    font-size: 14px;
+    padding: 12px;
+}
