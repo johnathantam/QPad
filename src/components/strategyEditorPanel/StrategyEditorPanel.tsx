@@ -10,18 +10,6 @@ function StrategyEditorPanel() {
   const runBacktest = useCodeEditorStore((set) => set.runBacktest);
   const result = useCodeEditorStore((set) => set.backtestResult);
 
-  // Sync the local useBacktest result into the shared store
-  // whenever it changes, so other components (e.g. Header) can read it.
-//   useEffect(() => {
-//     if (state.status === 'success') {
-//       setBacktestState('success', state.result, null);
-//     } else if (state.status === 'error') {
-//       setBacktestState('error', null, state.error);
-//     } else {
-//       setBacktestState(state.status);
-//     }
-//   }, [state, setBacktestState]);
-
   const handleRun = () => {
     runBacktest(["AAPL"]);
   };

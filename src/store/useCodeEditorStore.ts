@@ -42,6 +42,9 @@ interface CodeEditorState {
         error?: string | null
     ) => void;
 
+    backtestUniverse: string[];
+    setBacktestUniverse: (ids: string[]) => void;
+
     backtestSettings: BacktestSettings;
     setBacktestSettings: (s: Partial<BacktestSettings>) => void;
 
@@ -86,6 +89,10 @@ const useCodeEditorStore = create<CodeEditorState>((set, get) => ({
     setBacktestState: (status, result = null, error = null) =>
         set({ backtestStatus: status, backtestResult: result, backtestError: error }),
 
+    // store selected instruments (the "universe" the user picked to test against)
+    backtestUniverse: ['AAPL', 'NVDA'],
+    setBacktestUniverse: (universe) => set({ backtestUniverse: universe }),
+
     // store settings
     backtestSettings: {
         startingCapital: 100000,
@@ -94,20 +101,26 @@ const useCodeEditorStore = create<CodeEditorState>((set, get) => ({
         startDate: '2021-01-01',
         endDate: '2026-01-01',
     },
-    setBacktestSettings: (s: Partial<BacktestSettings>) => set((state) => ({ backtestSettings: { ...state.backtestSettings, ...s } })), 
+    setBacktestSettings: (s: Partial<BacktestSettings>) => set((state) => ({ backtestSettings: { ...state.backtestSettings, ...s } })),
 
-    runBacktest: async (instrumentIds) => {
+    runBacktest: async () => {
+        const instrumentIds = get().backtestUniverse;
+
+        if (instrumentIds.length === 0) {
+            get().addBacktestLog('Select at least one instrument before running.', 'error');
+            return;
+        }
+
         set({ backtestStatus: 'loading', backtestResult: null, backtestError: null });
+        
         try {
-            // load historical data for instruments (stocks)
+            // load historical data for the selected instruments (stocks)
             const data = await loadInstrumentData(instrumentIds);
 
-            // update status
             set({ backtestStatus: 'running' });
 
             const backtestWorker = getWorker();
 
-            // track backtest messages during run - adjust state
             backtestWorker.onmessage = (event: MessageEvent) => {
                 const { type } = event.data;
 
@@ -127,8 +140,7 @@ const useCodeEditorStore = create<CodeEditorState>((set, get) => ({
                 }
             };
 
-            // pass code and data into the worker for it to run
-            backtestWorker.postMessage({ code: get().code, backtestSettings: get().backtestSettings ,data: data });
+            backtestWorker.postMessage({ code: get().code, settings: get().backtestSettings, data: data });
         } catch (err: any) {
             get().addBacktestLog(err.message ?? 'Failed to load data', 'error');
             set({ backtestStatus: 'error', backtestResult: null, backtestError: err.message });

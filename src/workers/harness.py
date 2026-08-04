@@ -33,7 +33,6 @@ class Strategy:
             return
         self.cash -= cost
         self.positions[symbol] = self.positions.get(symbol, 0) + size
-        _emit_log(f"{self._current_date}: BUY {symbol} x{size} @ {price:.2f} (commission ${self._commission:.2f})", "success")
         self.trades.append({
             "date": self._current_date,
             "symbol": symbol,
@@ -60,7 +59,6 @@ class Strategy:
         proceeds = price * size - self._commission
         self.cash += proceeds
         self.positions[symbol] = current_position - size
-        _emit_log(f"{self._current_date}: SELL {symbol} x{size} @ {price:.2f} (commission ${self._commission:.2f})", "success")
         self.trades.append({
             "date": self._current_date,
             "symbol": symbol,

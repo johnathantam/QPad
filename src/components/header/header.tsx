@@ -1,7 +1,19 @@
 import "./header.css";
+import { useEffect, useState } from "react";
+import { getAllInstrumentIds } from "../../lib/loadData";
 import { StockCarousel } from "./stockCarousel/StockCarousel";
 
 function Header() {
+    const [instrumentIds, setInstrumentIds] = useState<string[]>([]);
+
+    useEffect(() => {
+        async function loadSymbols() {
+            const symbols = await getAllInstrumentIds();
+            setInstrumentIds(symbols);
+        }
+        loadSymbols();
+    }, []); 
+
     return (
         <>
             <header className="header-container">
@@ -11,15 +23,7 @@ function Header() {
 
                 <div className="header-carousel-container">
                     <StockCarousel
-                        tickers={[
-                            "AAPL", "MSFT", "GOOGL", "AMZN", "NVDA",
-                            "META", "TSLA", "AVGO", "ORCL", "NFLX",
-                            "AMD", "CRM", "ADBE", "INTC", "QCOM",
-                            "JPM", "BAC", "GS", "V", "MA",
-                            "WMT", "COST", "DIS", "NKE", "SBUX",
-                            "XOM", "CVX", "BA", "CAT", "GE",
-                            "SPY", "QQQ", "DIA", "BTC-USD", "ETH-USD",
-                        ]}
+                        tickers={instrumentIds}
                     ></StockCarousel>
                 </div>
             </header>

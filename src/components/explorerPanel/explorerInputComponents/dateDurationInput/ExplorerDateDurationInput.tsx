@@ -23,6 +23,7 @@ function ExplorerDateDurationInput({
                     type="date"
                     value={startDate}
                     className="date-input"
+                    min={startDate || undefined}
                     max={endDate || undefined}
                     onChange={(e) => onStartDateChange(e.target.value)}
                 />
@@ -32,6 +33,7 @@ function ExplorerDateDurationInput({
                     value={endDate}
                     className="date-input"
                     min={startDate || undefined}
+                    max={endDate || undefined}
                     onChange={(e) => onEndDateChange(e.target.value)}
                 />
             </div>
