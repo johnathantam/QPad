@@ -130,8 +130,8 @@ const useCodeEditorStore = create<CodeEditorState>((set, get) => ({
         startingCapital: 100000,
         commissionPerTrade: 0,
         slippagePercentage: 0,
-        startDate: '2021-01-01',
-        endDate: '2026-01-01',
+        startDate: '2000-01-03',
+        endDate: '2026-08-07',
         granularity: 'Daily'
     },
     setBacktestSettings: (s: Partial<BacktestSettings>) => set((state) => ({ backtestSettings: { ...state.backtestSettings, ...s } })),
@@ -147,8 +147,8 @@ const useCodeEditorStore = create<CodeEditorState>((set, get) => ({
         set({ backtestStatus: 'loading', backtestResult: null, backtestError: null });
 
         try {
-            // load historical data for the selected instruments (stocks)
-            const data = await loadInstrumentData(instrumentIds);
+            // load historical data for the selected instruments (stocks) given the granularity (Daily or Hourly)
+            const data = await loadInstrumentData(instrumentIds, get().backtestSettings.granularity);
 
             set({ backtestStatus: 'running' });
 
@@ -173,7 +173,7 @@ const useCodeEditorStore = create<CodeEditorState>((set, get) => ({
                 }
             };
 
-            backtestWorker.postMessage({ code: get().code, settings: get().backtestSettings, data: data });
+            backtestWorker.postMessage({ code: get().code, backtestSettings: get().backtestSettings, data: data });
         } catch (err: any) {
             get().addBacktestLog(err.message ?? 'Failed to load data', 'error');
             set({ backtestStatus: 'error', backtestResult: null, backtestError: err.message });

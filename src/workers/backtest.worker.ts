@@ -39,7 +39,7 @@ async function initPyodide() {
 self.onmessage = async (e: MessageEvent) => {
     // Extract backtesting code and stock data needed to execude the backtest
     const { code, backtestSettings, data } = e.data;
-
+    
     if (!pyodideReadyPromise) {
         pyodideReadyPromise = initPyodide();
     }

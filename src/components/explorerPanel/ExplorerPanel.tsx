@@ -43,7 +43,14 @@ function ExplorerPanel() {
                             { label: "Daily", value: "Daily" },
                             { label: "Hourly", value: "Hourly" },
                         ]}
-                        onChange={(granularity) => setSettings({granularity: granularity as "Daily" | "Hourly" })}
+                        onChange={(granularity) => {
+                            const interval = granularity as "Daily" | "Hourly";
+                            setSettings({
+                                granularity: interval,
+                                startDate: interval === "Hourly" ? "2023-09-08" : "2000-01-03", // depending on hourly or daily datasets, they have different start dates due to size of data formats
+                                endDate: "2026-08-07",
+                            });
+                        }}
                     />
                 </CollapsibleSection>
                 <CollapsibleSection title="Concurrent Settings" defaultOpen={false}>

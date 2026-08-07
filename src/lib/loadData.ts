@@ -14,10 +14,10 @@ async function getAllInstrumentIds(): Promise<string[]> {
 }
 
 // takes instrument IDs (equity tickers for now) and fetches their historical data
-async function loadInstrumentData(instrumentIds: string[]): Promise<Record<string, Bar[]>> {
+async function loadInstrumentData(instrumentIds: string[], granularity: "Daily" | "Hourly"): Promise<Record<string, Bar[]>> {
     const entries = await Promise.all(
         instrumentIds.map(async (instrumentId) => {
-            const res = await fetch(`${import.meta.env.BASE_URL}data/sampleStockUniverse/${instrumentId}.json`);
+            const res = await fetch(`${import.meta.env.BASE_URL}data/sampleStockUniverse/${granularity.toLowerCase()}/${instrumentId}.json`);
             if (!res.ok) {
                 throw new Error(`Failed to load data for ${instrumentId}`);
             }

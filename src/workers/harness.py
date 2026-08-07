@@ -135,7 +135,7 @@ def run_backtest(strategy_cls, backtestSettings, raw_data):
         if not bars_today:
             continue
 
-        date_str = str(date.date())
+        date_str = str(date)
         strat._current_date = date_str
         strat._current_bars = bars_today
         strat.on_bar(date_str, bars_today)
