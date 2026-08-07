@@ -4,6 +4,7 @@ import { BacktesterDocument } from "./backtesterDocument/BacktesterDocument";
 import { CollapsibleSection } from "./collapsiblePanelSection/CollapsiblePanelSection";
 import { ExplorerNumberInput } from "./explorerInputComponents/numberInput/ExplorerNumberInput";
 import { ExplorerDateDurationInput } from "./explorerInputComponents/dateDurationInput/ExplorerDateDurationInput";
+import { ExplorerDropdownInput } from "./explorerInputComponents/dropdownInput/DropdownInput";
 import { useCodeEditorStore } from "../../store/useCodeEditorStore"; // adjust path to match your project
 
 function ExplorerPanel() {
@@ -34,6 +35,15 @@ function ExplorerPanel() {
                         endDate={settings.endDate}
                         onStartDateChange={(date) => setSettings({ startDate: date })}
                         onEndDateChange={(date) => setSettings({ endDate: date })}
+                    />
+                    <ExplorerDropdownInput
+                        label="Bar Interval"
+                        value={settings.granularity}
+                        options={[
+                            { label: "Daily", value: "Daily" },
+                            { label: "Hourly", value: "Hourly" },
+                        ]}
+                        onChange={(granularity) => setSettings({granularity: granularity as "Daily" | "Hourly" })}
                     />
                 </CollapsibleSection>
                 <CollapsibleSection title="Concurrent Settings" defaultOpen={false}>

@@ -23,6 +23,7 @@ interface BacktestSettings {
     slippagePercentage: number;
     startDate: string;
     endDate: string;
+    granularity: 'Daily' | 'Hourly';
 }
 
 interface CodeEditorState {
@@ -131,6 +132,7 @@ const useCodeEditorStore = create<CodeEditorState>((set, get) => ({
         slippagePercentage: 0,
         startDate: '2021-01-01',
         endDate: '2026-01-01',
+        granularity: 'Daily'
     },
     setBacktestSettings: (s: Partial<BacktestSettings>) => set((state) => ({ backtestSettings: { ...state.backtestSettings, ...s } })),
 
