@@ -77,7 +77,22 @@ def align_data(raw_data):
         df.set_index("date", inplace=True)
         frames[symbol] = df
     all_dates = sorted(set().union(*[df.index for df in frames.values()]))
-    return frames, all_dates
+
+    # Reindex every frame to the full date union ONCE, then pull out
+    # plain numpy arrays. Positional array access is much cheaper
+    # than repeated pandas .loc[date] lookups inside the hot loop.
+    aligned = {}
+    for symbol, df in frames.items():
+        reindexed = df.reindex(all_dates)
+        aligned[symbol] = {
+            "open": reindexed["open"].to_numpy(),
+            "high": reindexed["high"].to_numpy(),
+            "low": reindexed["low"].to_numpy(),
+            "close": reindexed["close"].to_numpy(),
+            "volume": reindexed["volume"].to_numpy(),
+            "valid": reindexed["close"].notna().to_numpy(),  # was there real data this day?
+        }
+    return aligned, all_dates
 
 
 def run_backtest(strategy_cls, backtestSettings, raw_data):
@@ -88,11 +103,16 @@ def run_backtest(strategy_cls, backtestSettings, raw_data):
     start_date = settings.get("startDate")
     end_date = settings.get("endDate")
 
-    frames, all_dates = align_data(raw_data)
+    aligned, all_dates = align_data(raw_data)
+
+    # figure out the index range once, instead of filtering the date list per-day
+    start_idx, end_idx = 0, len(all_dates)
     if start_date:
-        all_dates = [d for d in all_dates if d >= pd.Timestamp(start_date)]
+        start_ts = pd.Timestamp(start_date)
+        start_idx = next((i for i, d in enumerate(all_dates) if d >= start_ts), len(all_dates))
     if end_date:
-        all_dates = [d for d in all_dates if d <= pd.Timestamp(end_date)]
+        end_ts = pd.Timestamp(end_date)
+        end_idx = next((i for i, d in enumerate(all_dates) if d > end_ts), len(all_dates))
 
     strat = strategy_cls()
     strat.cash = starting_capital
@@ -100,20 +120,22 @@ def run_backtest(strategy_cls, backtestSettings, raw_data):
     strat._slippage_percentage = slippage_percentage
     strat.on_start()
 
-    for date in all_dates:
+    for i in range(start_idx, end_idx):
+        date = all_dates[i]
         bars_today = {}
-        for symbol, df in frames.items():
-            if date in df.index:
-                row = df.loc[date]
+        for symbol, arrs in aligned.items():
+            if arrs["valid"][i]:
                 bars_today[symbol] = {
-                    "open": float(row["open"]), "high": float(row["high"]),
-                    "low": float(row["low"]), "close": float(row["close"]),
-                    "volume": float(row["volume"]),
+                    "open": float(arrs["open"][i]),
+                    "high": float(arrs["high"][i]),
+                    "low": float(arrs["low"][i]),
+                    "close": float(arrs["close"][i]),
+                    "volume": float(arrs["volume"][i]),
                 }
         if not bars_today:
             continue
 
-        date_str = str(date.date())
+        date_str = str(date)
         strat._current_date = date_str
         strat._current_bars = bars_today
         strat.on_bar(date_str, bars_today)
