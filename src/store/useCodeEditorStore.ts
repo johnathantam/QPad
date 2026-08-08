@@ -59,7 +59,7 @@ const DEFAULT_CODE = `class MyStrategy(Strategy):
     def on_start(self):
         self.symbol = "AAPL"  # the instrument this strategy trades
 
-    # on_bar runs ONCE PER DAY, for every day in the backtest period.
+    # on_bar runs ONCE PER DAY OR HOUR, for every day / hour in the backtest period.
     # "bar" is a dict of that day's price data for every instrument
     # currently loaded, e.g.:
     # { "AAPL": {"open": .., "high": .., "low": .., "close": .., "volume": ..}, ... }
@@ -83,7 +83,7 @@ const DEFAULT_CODE = `class MyStrategy(Strategy):
             size = int((self.cash * 0.10) / price)  # how many whole shares that buys
 
             if size > 0:
-                self.buy(self.symbol, size)  # places the buy order
+                self.buy(self.symbol, size)  # places the buy order based on close price
         else:
             # We already own shares — sell everything we're holding.
             # This just demonstrates sell() working; a real strategy
