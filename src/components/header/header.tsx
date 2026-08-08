@@ -19,7 +19,7 @@ function Header() {
             <header className="header-container">
                 <div className="header-icon"></div>
 
-                <h1 className="header-title">Roller Pad</h1>
+                <h1 className="header-title">Qoller Pad</h1>
 
                 <div className="header-carousel-container">
                     <StockCarousel
