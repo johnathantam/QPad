@@ -11,7 +11,7 @@ function PanelView() {
                 {/* Top row: two panels side by side */}
                 <Panel defaultSize={70} minSize={20}>
                     <Group orientation="horizontal">
-                        <Panel defaultSize={50} minSize={15}>
+                        <Panel defaultSize={350} minSize={15}>
                             <div className="panel-view-content-container">
                                 <ExplorerPanel />
                             </div>

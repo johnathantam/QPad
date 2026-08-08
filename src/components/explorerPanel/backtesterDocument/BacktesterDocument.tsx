@@ -29,7 +29,7 @@ function BacktesterDocument() {
       </div>
 
       <p className="backtester-docs-note">
-        Note: this backtest only covers the top 500 top companies and for more exposure to different stocks, they will have to be explicitly referenced in the code e.g. buy(ELBM)
+        Note: this backtest only covers the top 500 top companies from Wikipedia's top 500.
       </p>
     </div>
   );
