@@ -2,6 +2,8 @@
 
 A browser-based backtesting game. Write a Python trading strategy, run it against historical price data, and see how you did — all in-browser, no backend.
 
+https://johnathantam.github.io/QPad/
+
 ## How it works
 
 - Write a `Strategy` subclass in the built-in code editor (`on_start`, `on_bar`, `buy`, `sell`)
