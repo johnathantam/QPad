@@ -1,3 +1,7 @@
+<p align="center">
+  <img src="docs/images/quantpad.png" alt="QPad preview" width="900">
+</p>
+
 # QPad
 
 A browser-based backtesting game. Write a Python trading strategy, run it against historical price data, and see how you did — all in-browser, no backend.
